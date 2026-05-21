@@ -59,10 +59,10 @@ async function loadSheet() {
   const rows = text.split("\n").slice(1);
 
   dictionary = rows.map(row => {
-    const cols = row.split(",");
-    return {
-      term: cols[0],
-      definition: cols.slice(1).join(",")
+  const cols = row.split(",");
+  return {
+    term: cols[0],
+    definition: cols[1]
     };
   });
 }
