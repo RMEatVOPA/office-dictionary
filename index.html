@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Office Dictionary</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .result {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .term {
+      font-weight: bold;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Office Dictionary</h1>
+
+<input type="text" id="searchBox" placeholder="Search term...">
+
+<div id="results"></div>
+
+<script>
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJ3-2I87B0umdAM5LdBvTp40a6lUUzDINjX-aKR0EEEYkK0QDx8ew1D0hD3hNPSDIRwksJWA7lebk6/pub?output=csv";
+
+let dictionary = [];
+
+async function loadSheet() {
+  const response = await fetch(sheetURL);
+  const text = await response.text();
+
+  const rows = text.split("\n").slice(1);
+
+  dictionary = rows.map(row => {
+    const cols = row.split(",");
+    return {
+      term: cols[0],
+      definition: cols.slice(1).join(",")
+    };
+  });
+}
+
+function searchTerms(query) {
+  const resultsDiv = document.getElementById("results");
+
+  resultsDiv.innerHTML = "";
+
+  const filtered = dictionary.filter(item =>
+    item.term.toLowerCase().includes(query.toLowerCase())
+  );
+
+  filtered.forEach(item => {
+    resultsDiv.innerHTML += `
+      <div class="result">
+        <div class="term">${item.term}</div>
+        <div>${item.definition}</div>
+      </div>
+    `;
+  });
+}
+
+document.getElementById("searchBox").addEventListener("input", e => {
+  searchTerms(e.target.value);
+});
+
+loadSheet();
+</script>
+
+</body>
+</html>
