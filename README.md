@@ -1,1 +1,1 @@
-# office-dictionary
+# office-glossary
